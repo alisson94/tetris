@@ -9,15 +9,14 @@ class Board:
         self.matriz = [[0]*10 for _ in range(20) ]
         self.offSetX = 20
         self.offSetY = 20
-        self.tricks = []
         self.trickAtual = None
 
-        temp_trick = Trick(self)
-        self.trickAtual = temp_trick
-        self.tricks.append(temp_trick)
+        self.criarTrick()
 
     def atualizar(self):
-        pass
+        if self.trickAtual.y + formatos[self.trickAtual.formato]['y'] * constantes.TAMANHO_GRID == self.offSetY + self.quant_linhas * constantes.TAMANHO_GRID:
+            self.trickToBoard()
+            self.criarTrick()
 
     def desenharGrid(self, tela, tamanho):
         x_fim = self.offSetX + self.quant_colunas * tamanho  + 1
@@ -30,9 +29,27 @@ class Board:
     
     def criarTrick(self):
         trick = Trick(self)
-
         self.trickAtual = trick
 
+    def trickToBoard(self):
+        formatoTrick = self.trickAtual.matriz
+        for j, linha in enumerate(formatoTrick):
+            y = self.quant_linhas - len(formatoTrick) + j
+            for i, coluna in enumerate(linha):
+                x = int((self.trickAtual.x - self.offSetX) / constantes.TAMANHO_GRID) + i
+                
+                if formatoTrick[j][i] == 1:
+                    self.matriz[y][x] = 1
+
+    def desenharBoard(self):
+        for i in range(self.quant_linhas):
+            for j in range(self.quant_colunas):
+
+                if self.matriz[i][j] == 1:
+                    x = self.offSetX + j * constantes.TAMANHO_GRID
+                    y = self.offSetY + i * constantes.TAMANHO_GRID
+
+                    pygame.draw.rect(self.tela, "red", (x , y, constantes.TAMANHO_GRID, constantes.TAMANHO_GRID))
 
     def desenharTrickAtual(self):
         self.trickAtual.desenhar(self.tela)

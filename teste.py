@@ -1,4 +1,6 @@
 ma = [[0,1,0],
                     [1,1,1]]
 
-print(len(ma))
+for linha, index in enumerate(ma):
+    print(linha)
+    print(index)

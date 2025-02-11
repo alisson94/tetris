@@ -16,13 +16,14 @@ class Game:
 
     def novo_jogo(self):
         self.jogando = True
-
-        self.board = Board(game.tela, constantes.COLUNAS_BOARD, constantes.LINHAS_BOARD)
         
+        self.board = Board(self.tela, constantes.COLUNAS_BOARD, constantes.LINHAS_BOARD)
+
         self.timers = {
-            'descer tricks': Timer(200, True, self.board.trickAtual.descer)
-            #'criar trick': Timer(300, False, cri)
+            'descer tricks': Timer(200, True, self.board.trickAtual.descer),
+            'criar trick': Timer(300, False, self.board.criarTrick)
         }
+        
         self.timers['descer tricks'].ativar()
 
         while self.jogando:
@@ -42,9 +43,9 @@ class Game:
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_a:
-                    self.board.trickAtual.mover(-1)
+                    self.board.trickAtual.moverLateralmente(-1)
                 elif event.key == pygame.K_d:
-                    self.board.trickAtual.mover(1)
+                    self.board.trickAtual.moverLateralmente(1)
 
     def atualizar(self):
         self.board.atualizar()
@@ -58,6 +59,7 @@ class Game:
         self.tela.fill("purple")
 
         self.board.desenharGrid(self.tela, constantes.TAMANHO_GRID)
+        self.board.desenharBoard()
         self.board.desenharTrickAtual()
        
 
@@ -94,11 +96,17 @@ class Game:
     def tela_gameover(self):
         pass
 
-game = Game()
-game.tela_start()
 
-while game.esta_rodando:
-    game.novo_jogo()
-    game.tela_gameover()
+def main():
+    game = Game()
+    game.tela_start()
 
-pygame.quit()
+    while game.esta_rodando:
+        game.novo_jogo()
+        game.tela_gameover()
+
+    pygame.quit()
+
+
+if __name__ == "__main__":
+    main()
