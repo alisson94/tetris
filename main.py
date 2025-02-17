@@ -20,8 +20,7 @@ class Game:
         self.board = Board(self.tela, constantes.COLUNAS_BOARD, constantes.LINHAS_BOARD)
 
         self.timers = {
-            'descer tricks': Timer(200, True, self.board.trickAtual.descer),
-            'criar trick': Timer(300, False, self.board.criarTrick)
+            'descer tricks': Timer(200, True, self.board.descerTrick)
         }
         
         self.timers['descer tricks'].ativar()
@@ -46,6 +45,8 @@ class Game:
                     self.board.trickAtual.moverLateralmente(-1)
                 elif event.key == pygame.K_d:
                     self.board.trickAtual.moverLateralmente(1)
+                elif event.key == pygame.K_w:
+                    self.board.trickAtual.girar()
 
     def atualizar(self):
         self.board.atualizar()

@@ -1,5 +1,6 @@
 import pygame
 from classes.tricks import *
+from classes.timer import *
 
 class Board:
     def __init__(self, tela, x, y):
@@ -13,10 +14,17 @@ class Board:
 
         self.criarTrick()
 
+        self.timers = {
+            'criar trick': Timer(750, False, self.trickToBoard)
+        }
+
     def atualizar(self):
-        if self.trickAtual.y + formatos[self.trickAtual.formato]['y'] * constantes.TAMANHO_GRID == self.offSetY + self.quant_linhas * constantes.TAMANHO_GRID:
-            self.trickToBoard()
-            self.criarTrick()
+        for timer in self.timers.values():
+            timer.atualizar()
+
+        if self.trickAtual.seTrickChegouNoFinal():
+            self.timers['criar trick'].ativar()
+            
 
     def desenharGrid(self, tela, tamanho):
         x_fim = self.offSetX + self.quant_colunas * tamanho  + 1
@@ -28,8 +36,12 @@ class Board:
             pygame.draw.line(tela, "white", (self.offSetX, i), (x_fim, i))
     
     def criarTrick(self):
+        print('criar')
         trick = Trick(self)
         self.trickAtual = trick
+
+    def descerTrick(self):
+        self.trickAtual.descer()
 
     def trickToBoard(self):
         formatoTrick = self.trickAtual.matriz
@@ -40,6 +52,8 @@ class Board:
                 
                 if formatoTrick[j][i] == 1:
                     self.matriz[y][x] = 1
+        
+        self.criarTrick()
 
     def desenharBoard(self):
         for i in range(self.quant_linhas):
@@ -53,4 +67,3 @@ class Board:
 
     def desenharTrickAtual(self):
         self.trickAtual.desenhar(self.tela)
-
